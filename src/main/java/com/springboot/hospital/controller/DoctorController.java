@@ -3,6 +3,8 @@ package com.springboot.hospital.controller;
 import com.springboot.hospital.dto.CiteDTO;
 import com.springboot.hospital.dto.DoctorDTO;
 import com.springboot.hospital.service.DoctorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +15,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/doctor")
+@Tag(name = "Doctor")
+
 public class DoctorController {
 
     @Autowired
     private DoctorService doctorService;
 
+    @Operation(summary = "Consult for id")
     @GetMapping
-    public ResponseEntity<List<DoctorDTO>> listarMedicos(){
+    public ResponseEntity<List<DoctorDTO>> listDoctor(){
         List<DoctorDTO> medicos = doctorService.getAllDoctor();
         return new ResponseEntity<>(medicos, HttpStatus.OK);
     }
 
+    @Operation(summary = "List Doctor For Id")
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> listDoctorForId(@PathVariable Long id){
         return doctorService.getDoctorById(id)
@@ -31,11 +37,16 @@ public class DoctorController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @Operation(summary = "Save Doctor")
+
     @PostMapping
     public ResponseEntity<DoctorDTO> saveDoctor(@RequestBody DoctorDTO doctorDTO){
         DoctorDTO createdDoctor = doctorService.createDoctor(doctorDTO);
         return new ResponseEntity<>(createdDoctor,HttpStatus.CREATED);
     }
+
+    @Operation(summary = "Update Doctor")
+
 
     @PutMapping("/{id}")
     public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
@@ -47,12 +58,15 @@ public class DoctorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @Operation(summary = "Delete Doctor")
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable Long id){
         doctorService.deleteDoctor(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @Operation(summary = "list Cite For Doctor Id")
 
     @GetMapping("/{id}/cite")
     public ResponseEntity<Collection<CiteDTO>> listCiteForDoctorId(@PathVariable Long id){
@@ -64,7 +78,7 @@ public class DoctorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @Operation(summary = "Lis Doctor For Specialty")
     @GetMapping("/specialty/{specialty}")
     public ResponseEntity<List<DoctorDTO>> lisDoctorForSpecialty(@PathVariable String specialty){
         List<DoctorDTO> doc = doctorService.getDoctorBySpecialty(specialty);
