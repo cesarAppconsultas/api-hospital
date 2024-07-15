@@ -2,7 +2,7 @@ package com.springboot.hospital.service.impl;
 
 import com.springboot.hospital.dto.CiteDTO;
 import com.springboot.hospital.dto.PatientDTO;
-import com.springboot.hospital.mapper.CitaMapper;
+import com.springboot.hospital.mapper.CiteMapper;
 import com.springboot.hospital.mapper.PatientMapper;
 import com.springboot.hospital.model.Cite;
 import com.springboot.hospital.model.patient;
@@ -30,7 +30,7 @@ public class PatientServiceImpl implements PatientService {
     private PatientMapper patientMapper;
 
     @Autowired
-    private CitaMapper citaMapper;
+    private CiteMapper citeMapper;
 
     @Override
     public List<PatientDTO> getAllPatients() {
@@ -86,7 +86,7 @@ public class PatientServiceImpl implements PatientService {
     public Collection<CiteDTO> getCitesByPatientId(Long pacienteId) {
         Optional<patient> optionalPaciente = patientRepository.findById(pacienteId);
         return optionalPaciente.map(paciente -> paciente.getCites().stream()
-                .map(citaMapper::toDTO)
+                .map(citeMapper::toDTO)
                 .collect(Collectors.toList()))
                 .orElse(null);
     }

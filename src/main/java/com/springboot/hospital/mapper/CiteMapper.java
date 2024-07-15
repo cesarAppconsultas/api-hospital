@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
-public class CitaMapper {
+public class CiteMapper {
 
     @Autowired
     private DoctorRepository doctorRepository;

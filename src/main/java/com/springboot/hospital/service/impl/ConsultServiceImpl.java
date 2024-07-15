@@ -2,7 +2,7 @@ package com.springboot.hospital.service.impl;
 
 import com.springboot.hospital.dto.CiteDTO;
 import com.springboot.hospital.dto.ConsultDTO;
-import com.springboot.hospital.mapper.CitaMapper;
+import com.springboot.hospital.mapper.CiteMapper;
 import com.springboot.hospital.mapper.ConsultMapper;
 import com.springboot.hospital.model.Cite;
 import com.springboot.hospital.model.Consult;
@@ -30,7 +30,7 @@ public class ConsultServiceImpl implements ConsultService {
     private ConsultRepository consultRepository;
 
     @Autowired
-    private CitaMapper citaMapper;
+    private CiteMapper citeMapper;
 
     @Autowired
     private ConsultMapper consultMapper;
@@ -60,7 +60,7 @@ public class ConsultServiceImpl implements ConsultService {
         CiteDTO citeDTO = citeService.getCiteById(citeId).orElseThrow(() -> new EntityNotFoundException("Cita no encontrada"));
 
         Consult consult = new Consult();
-        consult.setCite(citaMapper.toEntity(citeDTO));
+        consult.setCite(citeMapper.toEntity(citeDTO));
         consult.setDateConsult(new Date());
         consult.setReport(consultDTO.getReport());
 

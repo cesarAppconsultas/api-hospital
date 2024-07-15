@@ -3,7 +3,7 @@ package com.springboot.hospital.service.impl;
 import com.springboot.hospital.dto.CiteDTO;
 import com.springboot.hospital.dto.DoctorDTO;
 import com.springboot.hospital.dto.PatientDTO;
-import com.springboot.hospital.mapper.CitaMapper;
+import com.springboot.hospital.mapper.CiteMapper;
 import com.springboot.hospital.mapper.DoctorMapper;
 import com.springboot.hospital.mapper.PatientMapper;
 import com.springboot.hospital.model.*;
@@ -41,7 +41,7 @@ public class CiteServiceImpl implements CiteService {
     private ConsultRepository consultRepository;
 
     @Autowired
-    private CitaMapper citaMapper;
+    private CiteMapper citeMapper;
 
     @Autowired
     private PatientMapper patientMapper;
@@ -59,14 +59,14 @@ public class CiteServiceImpl implements CiteService {
     public List<CiteDTO> getAllCite() {
         List<Cite> cites = citeRepository.findAll();
         return cites.stream()
-                .map(citaMapper::toDTO)
+                .map(citeMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<CiteDTO> getCiteById(Long id) {
         Optional<Cite> citaOptional = citeRepository.findById(id);
-        return citaOptional.map(citaMapper::toDTO);
+        return citaOptional.map(citeMapper::toDTO);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class CiteServiceImpl implements CiteService {
 
         patient patient = patientMapper.toEntity(patientDTO);
         Doctor doctor = doctorMapper.toEntity(doctorDTO);
-        Cite cite = citaMapper.toEntity(citeDTO, patient, doctor);
+        Cite cite = citeMapper.toEntity(citeDTO, patient, doctor);
 
         return citeRepository.save(cite);
     }
@@ -106,7 +106,7 @@ public class CiteServiceImpl implements CiteService {
             Optional<Doctor> medicoOptional = doctorRepository.findById(citeDTO.getDoctorId());
             cite.setDoctor(medicoOptional.get());
 
-            return citaMapper.toDTO(citeRepository.save(cite));
+            return citeMapper.toDTO(citeRepository.save(cite));
         }
         return null;
     }
@@ -131,7 +131,7 @@ public class CiteServiceImpl implements CiteService {
     public List<CiteDTO> getCiteByPatientId(Long pacienteId) {
         List<Cite> cites = citeRepository.findByPatientId(pacienteId);
         return cites.stream()
-                .map(citaMapper::toDTO)
+                .map(citeMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -139,7 +139,7 @@ public class CiteServiceImpl implements CiteService {
     public List<CiteDTO> getCitesByDoctorId(Long medicoId) {
         List<Cite> cites = citeRepository.findByDoctorId(medicoId);
         return cites.stream()
-                .map(citaMapper::toDTO)
+                .map(citeMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -147,7 +147,7 @@ public class CiteServiceImpl implements CiteService {
     public List<CiteDTO> getCitesByStatusCite(StatusCite statusCite) {
         List<Cite> cites = citeRepository.findByStatusCite(statusCite);
         return cites.stream()
-                .map(citaMapper::toDTO)
+                .map(citeMapper::toDTO)
                 .collect(Collectors.toList());
     }
 }

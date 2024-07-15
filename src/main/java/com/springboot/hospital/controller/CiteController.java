@@ -1,7 +1,7 @@
 package com.springboot.hospital.controller;
 
 import com.springboot.hospital.dto.CiteDTO;
-import com.springboot.hospital.mapper.CitaMapper;
+import com.springboot.hospital.mapper.CiteMapper;
 import com.springboot.hospital.mapper.DoctorMapper;
 import com.springboot.hospital.mapper.PatientMapper;
 import com.springboot.hospital.model.Cite;
@@ -35,7 +35,7 @@ public class CiteController {
     private PatientService patientService;
 
     @Autowired
-    private CitaMapper citaMapper;
+    private CiteMapper citeMapper;
 
     @Autowired
     private DoctorMapper doctorMapper;
@@ -69,7 +69,7 @@ public class CiteController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        CiteDTO newCiteDTO = citaMapper.toDTO(newCite);
+        CiteDTO newCiteDTO = citeMapper.toDTO(newCite);
         return new ResponseEntity<>(citeDTO,HttpStatus.CREATED);
     }
 

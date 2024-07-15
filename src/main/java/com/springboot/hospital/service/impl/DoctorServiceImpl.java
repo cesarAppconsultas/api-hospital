@@ -2,7 +2,7 @@ package com.springboot.hospital.service.impl;
 
 import com.springboot.hospital.dto.CiteDTO;
 import com.springboot.hospital.dto.DoctorDTO;
-import com.springboot.hospital.mapper.CitaMapper;
+import com.springboot.hospital.mapper.CiteMapper;
 import com.springboot.hospital.mapper.DoctorMapper;
 import com.springboot.hospital.model.Cite;
 import com.springboot.hospital.model.Doctor;
@@ -27,7 +27,7 @@ public class DoctorServiceImpl implements DoctorService {
     private CiteService citeService;
 
     @Autowired
-    private CitaMapper citaMapper;
+    private CiteMapper citeMapper;
 
     @Autowired
     private DoctorMapper doctorMapper;
@@ -86,7 +86,7 @@ public class DoctorServiceImpl implements DoctorService {
     public Collection<CiteDTO> getCitesByDoctorId(Long medicoId) {
         Optional<Doctor> optionalMedico = doctorRepository.findById(medicoId);
         return optionalMedico.map(medico -> medico.getCites().stream()
-                .map(citaMapper::toDTO)
+                .map(citeMapper::toDTO)
                 .collect(Collectors.toList()))
                 .orElse(null);
     }

@@ -1,7 +1,7 @@
 package com.springboot.hospital.controller;
 
 import com.springboot.hospital.dto.ConsultDTO;
-import com.springboot.hospital.mapper.CitaMapper;
+import com.springboot.hospital.mapper.CiteMapper;
 import com.springboot.hospital.service.CiteService;
 import com.springboot.hospital.service.ConsultService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ public class ConsultController {
     private ConsultService consultService;
 
     @Autowired
-    private CitaMapper citaMapper;
+    private CiteMapper citeMapper;
 
     @Autowired
     private CiteService citeService;

@@ -2,26 +2,12 @@ package com.springboot.hospital.mapper;
 
 import com.springboot.hospital.dto.DoctorDTO;
 import com.springboot.hospital.model.Doctor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class DoctorMapper {
+@Mapper(componentModel = "spring")
+public interface DoctorMapper {
 
-    public DoctorDTO toDTO(Doctor doctor){
-        DoctorDTO doctorDTO = new DoctorDTO();
-        doctorDTO.setId(doctor.getId());
-        doctorDTO.setName(doctor.getName());
-        doctorDTO.setEmail(doctor.getEmail());
-        doctorDTO.setSpecialty(doctor.getSpecialty());
-        return doctorDTO;
-    }
+    DoctorDTO toDTO(Doctor doctor);
 
-    public Doctor toEntity(DoctorDTO doctorDTO){
-        Doctor doctor = new Doctor();
-        doctor.setId(doctorDTO.getId());
-        doctor.setName(doctorDTO.getName());
-        doctor.setEmail(doctorDTO.getEmail());
-        doctor.setSpecialty(doctorDTO.getSpecialty());
-        return doctor;
-    }
+    Doctor toEntity(DoctorDTO doctorDTO);
 }
