@@ -1,14 +1,12 @@
 package com.springboot.hospital.controller;
 
 import com.springboot.hospital.dto.CiteDTO;
+import com.springboot.hospital.exception.ErrorMessages;
+import com.springboot.hospital.exception.ResourceNotFoundException;
 import com.springboot.hospital.mapper.CiteMapper;
-import com.springboot.hospital.mapper.DoctorMapper;
-import com.springboot.hospital.mapper.PatientMapper;
 import com.springboot.hospital.model.Cite;
 import com.springboot.hospital.model.StatusCite;
 import com.springboot.hospital.service.CiteService;
-import com.springboot.hospital.service.DoctorService;
-import com.springboot.hospital.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +26,11 @@ public class CiteController {
     @Autowired
     private CiteService citeService;
 
-    @Autowired
-    private DoctorService doctorService;
-
-    @Autowired
-    private PatientService patientService;
 
     @Autowired
     private CiteMapper citeMapper;
 
-    @Autowired
-    private DoctorMapper doctorMapper;
 
-    @Autowired
-    private PatientMapper patientMapper;
 
     @Operation(summary = "get all cite")
     @GetMapping
@@ -56,7 +45,7 @@ public class CiteController {
     public ResponseEntity<CiteDTO> listCitePorId(@PathVariable Long id){
         Optional<CiteDTO> citaDTOOptional = citeService.getCiteById(id);
         return citaDTOOptional.map(cite -> new ResponseEntity<>(cite,HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.RESOURCE_NOT_FOUND  + id));
     }
 
     @Operation(summary = "save cite")

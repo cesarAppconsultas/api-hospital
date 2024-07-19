@@ -2,6 +2,8 @@ package com.springboot.hospital.controller;
 
 import com.springboot.hospital.dto.CiteDTO;
 import com.springboot.hospital.dto.DoctorDTO;
+import com.springboot.hospital.exception.ErrorMessages;
+import com.springboot.hospital.exception.ResourceNotFoundException;
 import com.springboot.hospital.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,20 +36,24 @@ public class DoctorController {
     public ResponseEntity<DoctorDTO> listDoctorForId(@PathVariable Long id){
         return doctorService.getDoctorById(id)
                 .map(doc -> new ResponseEntity<>(doc,HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.RESOURCE_NOT_FOUND  + id));
     }
 
     @Operation(summary = "Save Doctor")
-
     @PostMapping
     public ResponseEntity<DoctorDTO> saveDoctor(@RequestBody DoctorDTO doctorDTO){
-        DoctorDTO createdDoctor = doctorService.createDoctor(doctorDTO);
-        return new ResponseEntity<>(createdDoctor,HttpStatus.CREATED);
+        try {
+            DoctorDTO createdDoctor = doctorService.createDoctor(doctorDTO);
+            return new ResponseEntity<>(createdDoctor,HttpStatus.CREATED);
+        }catch ( Exception e){
+            throw new ResourceNotFoundException(ErrorMessages.DOCTOR_CREATION_FAILED);
+        }
+
+
+
     }
 
     @Operation(summary = "Update Doctor")
-
-
     @PutMapping("/{id}")
     public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
         DoctorDTO updateDoctor = doctorService.updateDoctor(id, doctorDTO);
@@ -62,8 +68,14 @@ public class DoctorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable Long id){
-        doctorService.deleteDoctor(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            doctorService.deleteDoctor(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch ( Exception e){
+            throw new ResourceNotFoundException(ErrorMessages.DOCTOR_DELETE_FAILED);
+        }
+
+
     }
 
     @Operation(summary = "list Cite For Doctor Id")
@@ -81,7 +93,17 @@ public class DoctorController {
     @Operation(summary = "Lis Doctor For Specialty")
     @GetMapping("/specialty/{specialty}")
     public ResponseEntity<List<DoctorDTO>> lisDoctorForSpecialty(@PathVariable String specialty){
-        List<DoctorDTO> doc = doctorService.getDoctorBySpecialty(specialty);
-        return new ResponseEntity<>(doc,HttpStatus.OK);
+
+        try {
+            List<DoctorDTO> doc = doctorService.getDoctorBySpecialty(specialty);
+            return new ResponseEntity<>(doc,HttpStatus.OK);
+        }
+
+        catch ( Exception e){
+            throw new ResourceNotFoundException(ErrorMessages.DOCTOR_GET_FAILED);
+        }
+
+
+
     }
 }

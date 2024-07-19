@@ -2,6 +2,8 @@ package com.springboot.hospital.controller;
 
 import com.springboot.hospital.dto.CiteDTO;
 import com.springboot.hospital.dto.PatientDTO;
+import com.springboot.hospital.exception.ErrorMessages;
+import com.springboot.hospital.exception.ResourceNotFoundException;
 import com.springboot.hospital.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,15 +38,20 @@ public class PatientController {
     public ResponseEntity<PatientDTO> listPatientForId(@PathVariable Long id){
         return patientService.getPatientById(id)
                 .map(patientDto -> new ResponseEntity<>(patientDto,HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.RESOURCE_NOT_FOUND  + id));
+
     }
 
     @Operation(summary = "Save Patient")
 
     @PostMapping
-    public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO){
-        PatientDTO createdPatientDTO = patientService.createPatient(patientDTO);
-        return new ResponseEntity<>(createdPatientDTO,HttpStatus.CREATED);
+    public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) {
+        try {
+            PatientDTO createdPatientDTO = patientService.createPatient(patientDTO);
+            return new ResponseEntity<>(createdPatientDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(ErrorMessages.PATIENT_CREATION_FAILED);
+        }
     }
 
     @Operation(summary = "Update Patient")
@@ -56,17 +63,21 @@ public class PatientController {
             return new ResponseEntity<>(updatePatient,HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException(ErrorMessages.PATIENT_UPDATE_FAILED + id);
+
         }
     }
+
     @Operation(summary = "Delete Patient")
-
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePatient(@PathVariable Long id){
-        patientService.deletePatient(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
+        try {
+            patientService.deletePatient(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(ErrorMessages.PATIENT_DELETION_FAILED + id);
+        }
     }
+
 
     @Operation(summary = "List Cite For PatientId")
 
@@ -74,5 +85,8 @@ public class PatientController {
     public ResponseEntity<Collection<CiteDTO>> listCiteForPatientId(@PathVariable Long id){
         Collection<CiteDTO> cite = patientService.getCitesByPatientId(id);
         return new ResponseEntity<>(cite,HttpStatus.OK);
+
+
+
     }
 }

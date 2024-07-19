@@ -1,8 +1,8 @@
 package com.springboot.hospital.controller;
 
 import com.springboot.hospital.dto.ConsultDTO;
-import com.springboot.hospital.mapper.CiteMapper;
-import com.springboot.hospital.service.CiteService;
+import com.springboot.hospital.exception.ErrorMessages;
+import com.springboot.hospital.exception.ResourceNotFoundException;
 import com.springboot.hospital.service.ConsultService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,14 +21,10 @@ import java.util.Optional;
 
 public class ConsultController {
 
+
     @Autowired
     private ConsultService consultService;
 
-    @Autowired
-    private CiteMapper citeMapper;
-
-    @Autowired
-    private CiteService citeService;
 
     @Operation(summary = "list Consult")
     @GetMapping
@@ -43,8 +39,9 @@ public class ConsultController {
     public ResponseEntity<ConsultDTO> getConsult(@PathVariable Long id){
         Optional<ConsultDTO> consult = consultService.getConsultById(id);
         return consult.map(dto -> new ResponseEntity<>(dto,HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.RESOURCE_NOT_FOUND  + id));
     }
+
 
     @Operation(summary = "Save Consult")
 
